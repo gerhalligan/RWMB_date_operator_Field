@@ -3,6 +3,8 @@ The RWMB_date_operator_Field extension for the Meta Box plugin allows users to c
 
 Based on RWMB_math_operator_Field by Kevin Lanteri Kraeutler https://github.com/kevinlanteri/RWMB_math_operator_Field
 
+I use this with WPCodeBox (https://wpcodebox.com/) but any wp code snippet will do. You can also use files instead, if you prefer.
+
 Summary
 The RWMB_date_operator_Field extension for the Meta Box plugin allows users to create a custom field that calculates the difference between two dates. This difference can be expressed in years, months, or days. The field supports dynamic dates, where one or both dates can be sourced from other fields, set to a static date, or use the current date. This extension is useful for scenarios such as calculating age, duration, or time intervals within a custom meta box.
 
