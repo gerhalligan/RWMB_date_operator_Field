@@ -5,16 +5,17 @@ Based on RWMB_math_operator_Field by Kevin Lanteri Kraeutler https://github.com/
 
 I use this with WPCodeBox (https://wpcodebox.com/) but any wp code snippet will do. You can also use files instead, if you prefer.
 
-Summary
+Summary<br>
 The RWMB_date_operator_Field extension for the Meta Box plugin allows users to create a custom field that calculates the difference between two dates. This difference can be expressed in years, months, or days. The field supports dynamic dates, where one or both dates can be sourced from other fields, set to a static date, or use the current date. This extension is useful for scenarios such as calculating age, duration, or time intervals within a custom meta box.
 
-Features
+Features<br>
 Date Difference Calculation: Calculate the difference between two dates in years, months, or days.
 Dynamic Date Sources: Use field IDs to reference other date fields, set a static date, or use the current date.
 Customizable Output Format: Choose between years, months, or days for the date difference calculation.
-Integration with Meta Box Builder: Easily add and configure this field type using the Meta Box Builder interface.
-Usage Instructions
-Installation
+Integration with Meta Box Builder: Easily add and configure this field type using the Meta Box Builder interface.<br>
+<br>
+Usage Instructions<br>
+Installation<br>
 1. Include the PHP Class
 Add the RWMB_date_operator_Field class definition to your theme or plugin.
 2. Enqueue JavaScript Dependencies
