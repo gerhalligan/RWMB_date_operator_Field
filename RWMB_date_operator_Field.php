@@ -17,7 +17,7 @@ Add the RWMB_date_operator_Field class definition to your theme or plugin.
 Ensure that the moment.js library is enqueued. This can be done within the add_actions method of the class as shown above.
 
 3. Add to Meta Box Builder
--Use the Meta Box Builder to add the date_operator field type to your custom meta boxes. Configure the field options such as id_to_calc, second_date, and date_format as needed.
+-Use the Meta Box Builder to add the date_operator field type to your custom meta boxes. Configure the field options such as id_to_calc_date, second_date, and date_format as needed.
 
 Example Configuration
 Here is an example of how to configure the date_operator field in the Meta Box Builder:
@@ -36,19 +36,17 @@ class RWMB_date_operator_Field extends RWMB_Field{
 
     public static function html( $meta, $field )
     {
-        $id_to_calc = isset($field['id_to_calc']) ? $field['id_to_calc'] : '';
+        $id_to_calc_date = isset($field['id_to_calc_date']) ? $field['id_to_calc_date'] : '';
         $second_date = isset($field['second_date']) ? $field['second_date'] : '';
-        $formula = isset($field['formula']) ? $field['formula'] : '';
         $date_format = isset($field['date_format']) ? $field['date_format'] : 'days'; // default to 'days' if not set
 
         return sprintf(
             '<input type="text" name="%s" id="%s" class="rwmb-date_operator rwmb-text" readonly value="%s">
-<script type="text/html" class="rwmb_date_operator_json" data-jsoptions="%s" data-formula="%s" data-operatorfield="%s" data-dateformat="%s"></script>',
+<script type="text/html" class="rwmb_date_operator_json" data-jsoptions="%s" data-operatorfield="%s" data-dateformat="%s"></script>',
             $field['field_name'],
             $field['id'],
             $meta,
-            esc_attr( wp_json_encode( [ "fields_id" =>  explode(',', $id_to_calc ), "second_date" => $second_date ] ) ),
-            $formula,
+            esc_attr( wp_json_encode( [ "fields_id" =>  explode(',', $id_to_calc_date ), "second_date" => $second_date ] ) ),
             $field['id'],
             $date_format
         );
@@ -57,7 +55,6 @@ class RWMB_date_operator_Field extends RWMB_Field{
     public static function add_actions()
     {
         wp_enqueue_script('moment_js', 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js', ['jquery'], uniqid(), true );
-         //wp_enqueue_script('mb_date_operator_js', self::get_theme_file_url('/js/rwmb_date_operation.js'), ['jquery','rwmb','moment_js'], uniqid(), true );
         wp_enqueue_script('rwmb');
     }
 
@@ -72,7 +69,7 @@ add_filter( 'mbb_field_types', function ( $field_types ) {
         'category' => 'advanced',
         'controls' => [
             'name', 'id', 'type', 'label_description', 'desc',
-            \MBB\Control::Input( 'id_to_calc', [
+            \MBB\Control::Input( 'id_to_calc_date', [
                 'label'   => __( 'Field ID for the first date', 'earlytrack' ),
                 'tooltip' => __('Enter the field ID for the first date.', 'earlytrack'),
                 'required'    => true,
@@ -98,5 +95,3 @@ add_filter( 'mbb_field_types', function ( $field_types ) {
 
     return $field_types;
 } );
-
-?>
