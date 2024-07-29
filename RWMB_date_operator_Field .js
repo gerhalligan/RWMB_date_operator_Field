@@ -35,8 +35,6 @@ jQuery(document).ready(function($){
 });
 
 function etrck_date_operator(object){
-    //get the formula form data-formula
-    var formula = object.data('formula');
     //get the operator field id from data-operatorfield attribute
     var operatorField = object.data('operatorfield');
 
@@ -63,6 +61,8 @@ function etrck_date_operator(object){
     jQuery.each(ids, function(i, id){
         idsWithNames.push('[name*='+id+']');
     });
+
+    //console.log('etrck_date_operator: ' + idsWithNames.join(','));
 
     //everytime the value of the ids fields changes, apply the formula
     jQuery(document).on('change input', idsWithNames.join(','), ids, function() {
@@ -108,8 +108,6 @@ function etrck_group_date_operator(object, cloneId, groupId, index){
         etrck_date_operator(object);
     }
 
-    //get the formula form data-formula
-    var formula = object.data('formula');
     //get the operator field id from data-operatorfield attribute
     var operatorField = object.data('operatorfield');
 
@@ -145,45 +143,37 @@ function etrck_group_date_operator(object, cloneId, groupId, index){
         idsWithNamesIds.push(jQuery(id).attr('id'));
     });
 
-    //replace the item in the formula with the new id
-    jQuery.each(ids, function(i, id){
-        formula = formula.replace(id, idsWithNamesIds[i]);
-    });
-
     //everytime the value of the ids fields changes, apply the formula
-    jQuery(document).on('change input', idsWithNames.join(','), idsWithNamesIds, function() {
-        console.log('group changed');
-        //get the operator field value
-        var operatorFieldValue = jQuery('[name="' + operatorField + '"]').val();
-        //if the operator field is empty, set it to 0
-        if(operatorFieldValue === ''){
-            jQuery('[name="' + operatorField + '"]').val(0);
-        }
+    jQuery(document).ready(function($) {
+        jQuery(document).on('change input', idsWithNames.join(','), function() {
+            console.log('group changed');
+            var $closestParent = $(this).closest('.rwmb-clone.rwmb-group-clone.rwmb-sort-clone');
+            var operatorFieldValue = $closestParent.find('[name="' + operatorField + '"]').val();
+            if (operatorFieldValue === '') {
+                $closestParent.find('[name="' + operatorField + '"]').val(0);
+            }
 
-        //get the value of the ids fields
-        var firstDateValue = jQuery('[name*="'+ids[0]+'"]').val();
+            var firstDateValue = $closestParent.find('[name*="' + ids[0] + '"]').val();
+            var secondDateValue = secondDate;
+            if (secondDate === '') {
+                secondDateValue = moment().format('YYYY-MM-DD');
+            } else if (secondDate.match(/^\d{4}-\d{2}-\d{2}$/) === null) {
+                secondDateValue = $closestParent.find('[name*="' + secondDate + '"]').val();
+            }
 
-        //get the value of the second date
-        var secondDateValue = secondDate;
-        if(secondDate === ''){
-            secondDateValue = moment().format('YYYY-MM-DD');
-        } else if (secondDate.match(/^\d{4}-\d{2}-\d{2}$/) === null) {
-            secondDateValue = jQuery('[name*="'+secondDate+'"]').val();
-        }
+            var diff = 0;
+            var firstDate = moment(firstDateValue, 'YYYY-MM-DD');
+            var secondDateMoment = moment(secondDateValue, 'YYYY-MM-DD');
 
-        //calculate the difference
-        var diff = 0;
-        var firstDate = moment(firstDateValue, 'YYYY-MM-DD');
-        var secondDateMoment = moment(secondDateValue, 'YYYY-MM-DD');
+            if (dateFormat === 'years') {
+                diff = secondDateMoment.diff(firstDate, 'years', true);
+            } else if (dateFormat === 'months') {
+                diff = secondDateMoment.diff(firstDate, 'months', true);
+            } else {
+                diff = secondDateMoment.diff(firstDate, 'days', true);
+            }
 
-        if(dateFormat === 'years'){
-            diff = secondDateMoment.diff(firstDate, 'years', true);
-        } else if(dateFormat === 'months'){
-            diff = secondDateMoment.diff(firstDate, 'months', true);
-        } else {
-            diff = secondDateMoment.diff(firstDate, 'days', true);
-        }
-
-        jQuery('[name="' + operatorField + '"]').val(diff.toFixed(2)).trigger('change');
+            $closestParent.find('[name="' + operatorField + '"]').val(diff.toFixed(2)).trigger('change');
+        });
     });
 }
