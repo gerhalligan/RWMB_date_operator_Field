@@ -33,149 +33,149 @@ jQuery(document).ready(function($) {
         }
     })( jQuery, window.rwmb || {} );
 
-function etrck_date_operator(object){
-    //get the operator field id from data-operatorfield attribute
-    var operatorField = object.data('operatorfield');
+    function etrck_date_operator(object){
+        //get the operator field id from data-operatorfield attribute
+        var operatorField = object.data('operatorfield');
 
-    //get the date format
-    var dateFormat = object.data('dateformat');
+        //get the date format
+        var dateFormat = object.data('dateformat');
 
-    //get the operator field value
-    var operatorFieldValue = jQuery('#'+operatorField).val();
-
-    //if the operator field is empty, set it to 0
-    if(operatorFieldValue === ''){
-        jQuery('#'+operatorField).val(0);
-    }
-
-    //get the ids that we will apply the formula to, from the data-jsoptions attribute
-    var ids = object.data('jsoptions');
-    ids = ids.fields_id;
-
-    //get the second date
-    var secondDate = object.data('jsoptions').second_date;
-
-    //join with [name=] to get the radio and checkbox fields
-    var idsWithNames = [];
-    jQuery.each(ids, function(i, id){
-        idsWithNames.push('[name*='+id+']');
-    });
-
-    //also include the second date field in the event listener
-    if(secondDate && secondDate.match(/^\d{4}-\d{2}-\d{2}$/) === null){
-        idsWithNames.push('[name*="'+secondDate+'"]');
-    }
-
-    //everytime the value of the ids fields or second date field changes, apply the formula
-    jQuery(document).on('change input', idsWithNames.join(','), function() {
-        //get the closest parent div with the specified classes
-        var $parentDiv = $(this).closest('.rwmb-clone.rwmb-group-clone.rwmb-sort-clone');
-        
         //get the operator field value
-        var operatorFieldValue = $parentDiv.find('[name="' + operatorField + '"]').val();
+        var operatorFieldValue = jQuery('#'+operatorField).val();
+
         //if the operator field is empty, set it to 0
         if(operatorFieldValue === ''){
-            $parentDiv.find('[name="' + operatorField + '"]').val(0);
+            jQuery('#'+operatorField).val(0);
         }
 
-        //get the value of the ids fields
-        var firstDateValue = $parentDiv.find('[name*="'+ids[0]+'"]').val();
+        //get the ids that we will apply the formula to, from the data-jsoptions attribute
+        var ids = object.data('jsoptions');
+        ids = ids.fields_id;
 
-        //get the value of the second date
-        var secondDateValue = secondDate;
-        if(secondDate === ''){
-            secondDateValue = moment().format('YYYY-MM-DD');
-        } else if (secondDate.match(/^\d{4}-\d{2}-\d{2}$/) === null) {
-            secondDateValue = $parentDiv.find('[name*="'+secondDate+'"]').val();
+        //get the second date
+        var secondDate = object.data('jsoptions').second_date;
+
+        //join with [name=] to get the radio and checkbox fields
+        var idsWithNames = [];
+        jQuery.each(ids, function(i, id){
+            idsWithNames.push('[name*='+id+']');
+        });
+
+        //also include the second date field in the event listener
+        if(secondDate && secondDate.match(/^\d{4}-\d{2}-\d{2}$/) === null){
+            idsWithNames.push('[name*="'+secondDate+'"]');
         }
 
-        //calculate the difference
-        var diff = 0;
-        var firstDate = moment(firstDateValue, 'YYYY-MM-DD');
-        var secondDateMoment = moment(secondDateValue, 'YYYY-MM-DD');
+        //everytime the value of the ids fields or second date field changes, apply the formula
+        jQuery(document).on('change input', idsWithNames.join(','), function() {
+            //get the closest parent div with the specified classes
+            var $parentDiv = $(this).closest('.rwmb-clone.rwmb-group-clone.rwmb-sort-clone');
+            
+            //get the operator field value
+            var operatorFieldValue = $parentDiv.find('[name="' + operatorField + '"]').val();
+            //if the operator field is empty, set it to 0
+            if(operatorFieldValue === ''){
+                $parentDiv.find('[name="' + operatorField + '"]').val(0);
+            }
 
-        if(dateFormat === 'years'){
-            diff = secondDateMoment.diff(firstDate, 'years', true);
-        } else if(dateFormat === 'months'){
-            diff = secondDateMoment.diff(firstDate, 'months', true);
-        } else {
-            diff = secondDateMoment.diff(firstDate, 'days', true);
-        }
+            //get the value of the ids fields
+            var firstDateValue = $parentDiv.find('[name*="'+ids[0]+'"]').val();
 
-        $parentDiv.find('[name="' + operatorField + '"]').val(diff.toFixed(2)).trigger('change');
-    });
-}
+            //get the value of the second date
+            var secondDateValue = secondDate;
+            if(secondDate === ''){
+                secondDateValue = moment().format('YYYY-MM-DD');
+            } else if (secondDate.match(/^\d{4}-\d{2}-\d{2}$/) === null) {
+                secondDateValue = $parentDiv.find('[name*="'+secondDate+'"]').val();
+            }
 
-//MB GROUPS, based on the function above
-function etrck_group_date_operator(object, cloneId, groupId, index){
+            //calculate the difference
+            var diff = 0;
+            var firstDate = moment(firstDateValue, 'YYYY-MM-DD');
+            var secondDateMoment = moment(secondDateValue, 'YYYY-MM-DD');
 
-    if(!index){
-        etrck_date_operator(object);
+            if(dateFormat === 'years'){
+                diff = secondDateMoment.diff(firstDate, 'years', true);
+            } else if(dateFormat === 'months'){
+                diff = secondDateMoment.diff(firstDate, 'months', true);
+            } else {
+                diff = secondDateMoment.diff(firstDate, 'days', true);
+            }
+
+            $parentDiv.find('[name="' + operatorField + '"]').val(diff.toFixed(2)).trigger('change');
+        });
     }
 
-    //get the operator field id from data-operatorfield attribute
-    var operatorField = object.data('operatorfield');
+    //MB GROUPS, based on the function above
+    function etrck_group_date_operator(object, cloneId, groupId, index){
 
-    //get the date format
-    var dateFormat = object.data('dateformat');
+        if(!index){
+            etrck_date_operator(object);
+        }
 
-    operatorField = groupId+'\\['+index+'\\]\\['+operatorField+'\\]'; //name of the newly cloned field
+        //get the operator field id from data-operatorfield attribute
+        var operatorField = object.data('operatorfield');
 
-    //get the ids that we will apply the formula to, from the data-jsoptions attribute
-    var ids = object.data('jsoptions');
-    ids = ids.fields_id;
+        //get the date format
+        var dateFormat = object.data('dateformat');
 
-    //get the second date
-    var secondDate = object.data('jsoptions').second_date;
+        operatorField = groupId+'\\['+index+'\\]\\['+operatorField+'\\]'; //name of the newly cloned field
 
-    //join with [name=] to get the radio and checkbox fields
-    var idsWithNames = [];
-    jQuery.each(ids, function(i, id){
-        idsWithNames.push('[name*="'+groupId+'\\['+index+'\\]\\['+id+'\\]"]');
-    });
+        //get the ids that we will apply the formula to, from the data-jsoptions attribute
+        var ids = object.data('jsoptions');
+        ids = ids.fields_id;
 
-    //also include the second date field in the event listener
-    if(secondDate && secondDate.match(/^\d{4}-\d{2}-\d{2}$/) === null){
-        idsWithNames.push('[name*="'+groupId+'\\['+index+'\\]\\['+secondDate+'\\]"]');
+        //get the second date
+        var secondDate = object.data('jsoptions').second_date;
+
+        //join with [name=] to get the radio and checkbox fields
+        var idsWithNames = [];
+        jQuery.each(ids, function(i, id){
+            idsWithNames.push('[name*="'+groupId+'\\['+index+'\\]\\['+id+'\\]"]');
+        });
+
+        //also include the second date field in the event listener
+        if(secondDate && secondDate.match(/^\d{4}-\d{2}-\d{2}$/) === null){
+            idsWithNames.push('[name*="'+groupId+'\\['+index+'\\]\\['+secondDate+'\\]"]');
+        }
+
+        //everytime the value of the ids fields or second date field changes, apply the formula
+        jQuery(document).on('change input', idsWithNames.join(','), function() {
+            //get the closest parent div with the specified classes
+            var $parentDiv = $(this).closest('.rwmb-clone.rwmb-group-clone.rwmb-sort-clone');
+            
+            //get the operator field value
+            var operatorFieldValue = $parentDiv.find('[name="' + operatorField + '"]').val();
+            //if the operator field is empty, set it to 0
+            if(operatorFieldValue === ''){
+                $parentDiv.find('[name="' + operatorField + '"]').val(0);
+            }
+
+            //get the value of the ids fields
+            var firstDateValue = $parentDiv.find('[name*="'+ids[0]+'"]').val();
+
+            //get the value of the second date
+            var secondDateValue = secondDate;
+            if(secondDate === ''){
+                secondDateValue = moment().format('YYYY-MM-DD');
+            } else if (secondDate.match(/^\d{4}-\d{2}-\d{2}$/) === null) {
+                secondDateValue = $parentDiv.find('[name*="'+secondDate+'"]').val();
+            }
+
+            //calculate the difference
+            var diff = 0;
+            var firstDate = moment(firstDateValue, 'YYYY-MM-DD');
+            var secondDateMoment = moment(secondDateValue, 'YYYY-MM-DD');
+
+            if(dateFormat === 'years'){
+                diff = secondDateMoment.diff(firstDate, 'years', true);
+            } else if(dateFormat === 'months'){
+                diff = secondDateMoment.diff(firstDate, 'months', true);
+            } else {
+                diff = secondDateMoment.diff(firstDate, 'days', true);
+            }
+
+            $parentDiv.find('[name="' + operatorField + '"]').val(diff.toFixed(2)).trigger('change');
+        });
     }
-
-    //everytime the value of the ids fields or second date field changes, apply the formula
-    jQuery(document).on('change input', idsWithNames.join(','), function() {
-        //get the closest parent div with the specified classes
-        var $parentDiv = $(this).closest('.rwmb-clone.rwmb-group-clone.rwmb-sort-clone');
-        
-        //get the operator field value
-        var operatorFieldValue = $parentDiv.find('[name="' + operatorField + '"]').val();
-        //if the operator field is empty, set it to 0
-        if(operatorFieldValue === ''){
-            $parentDiv.find('[name="' + operatorField + '"]').val(0);
-        }
-
-        //get the value of the ids fields
-        var firstDateValue = $parentDiv.find('[name*="'+ids[0]+'"]').val();
-
-        //get the value of the second date
-        var secondDateValue = secondDate;
-        if(secondDate === ''){
-            secondDateValue = moment().format('YYYY-MM-DD');
-        } else if (secondDate.match(/^\d{4}-\d{2}-\d{2}$/) === null) {
-            secondDateValue = $parentDiv.find('[name*="'+secondDate+'"]').val();
-        }
-
-        //calculate the difference
-        var diff = 0;
-        var firstDate = moment(firstDateValue, 'YYYY-MM-DD');
-        var secondDateMoment = moment(secondDateValue, 'YYYY-MM-DD');
-
-        if(dateFormat === 'years'){
-            diff = secondDateMoment.diff(firstDate, 'years', true);
-        } else if(dateFormat === 'months'){
-            diff = secondDateMoment.diff(firstDate, 'months', true);
-        } else {
-            diff = secondDateMoment.diff(firstDate, 'days', true);
-        }
-
-        $parentDiv.find('[name="' + operatorField + '"]').val(diff.toFixed(2)).trigger('change');
-    });
-}
 });
