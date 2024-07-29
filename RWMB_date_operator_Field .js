@@ -1,4 +1,4 @@
-jQuery(document).ready(function($) {
+jQuery(document).ready(function($){
     (function ( $, rwmb ) {
         'use strict';
 
@@ -32,6 +32,7 @@ jQuery(document).ready(function($) {
             console.error('rwmb is not defined');
         }
     })( jQuery, window.rwmb || {} );
+
 
     function etrck_date_operator(object){
         //get the operator field id from data-operatorfield attribute
@@ -87,6 +88,11 @@ jQuery(document).ready(function($) {
                 secondDateValue = moment().format('YYYY-MM-DD');
             } else if (secondDate.match(/^\d{4}-\d{2}-\d{2}$/) === null) {
                 secondDateValue = $parentDiv.find('[name*="'+secondDate+'"]').val();
+            }
+
+            // Check if secondDateValue is still empty and set it to today's date if it is
+            if(secondDateValue === ''){
+                secondDateValue = moment().format('YYYY-MM-DD');
             }
 
             //calculate the difference
