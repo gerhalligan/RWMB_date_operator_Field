@@ -168,6 +168,11 @@ jQuery(document).ready(function($){
                 secondDateValue = $parentDiv.find('[name*="'+secondDate+'"]').val();
             }
 
+            // Check if secondDateValue is still empty and set it to today's date if it is
+            if(secondDateValue === ''){
+                secondDateValue = moment().format('YYYY-MM-DD');
+            }
+
             //calculate the difference
             var diff = 0;
             var firstDate = moment(firstDateValue, 'YYYY-MM-DD');
